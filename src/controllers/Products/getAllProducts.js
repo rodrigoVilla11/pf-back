@@ -67,6 +67,7 @@ const getAllProducts = async (req, res) => {
     const products = await queryProducts
       .populate("comments", { products: 0, __v: 0, _id: 0 })
       .populate("questions", { products: 0, __v: 0, _id: 0 })
+      .populate("image", { url: 1, _id: 1 })
       .skip(index)
       .limit(13);
 
