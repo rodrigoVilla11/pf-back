@@ -1,7 +1,8 @@
 const mercadopago = require("mercadopago");
-require("dotenv").config();
 const User = require("../../models/User");
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
+const { URL_FRONT } = process.env;
 
 mercadopago.configure({
   access_token: process.env.ACCESS_TOKEN_MERCADOPAGO,
@@ -10,7 +11,7 @@ mercadopago.configure({
 const handlerMercadoPago = async (req, res) => {
   const { shoppingCart } = req.body;
   const { token } = req.params;
-  const URL = "http://localhost:5173/";
+  const URL = `${URL_FRONT}/`;
   try {
     const userId = jwt.verify(token, process.env.SECRET_KEY_JWT);
     if (!userId) throw Error("No estas logueado");
@@ -42,7 +43,15 @@ const handlerMercadoPago = async (req, res) => {
       },
       auto_return: "approved",
     };
-
+    if (
+      !user.name ||
+      !user.email ||
+      !user.address ||
+      !user.phone ||
+      !user.birthday
+    ) {
+      throw Error("Debes completar tus datos antes de realizar una compra");
+    }
     try {
       const response = await mercadopago.preferences.create(preference);
       console.log(response.body.init_point);

@@ -19,10 +19,6 @@ const getUserByEmail = require("../controllers/Users/getUserByEmail");
 const deleteAnswers = require("../controllers/QA/deleteA");
 const getAnswers = require("../controllers/QA/getA");
 const postAnswers = require("../controllers/QA/postA");
-const postDelivery = require("../controllers/Delivery/postDelivery");
-const getDeliveryById = require("../controllers/Delivery/getDeliveryById");
-const updateDelivery = require("../controllers/Delivery/updateDelivery");
-const deleteDelivery = require("../controllers/Delivery/deleteDelivery");
 const postSC = require("../controllers/ShoppingCart/postSC");
 const getSC = require("../controllers/ShoppingCart/getSC");
 const deleteSC = require("../controllers/ShoppingCart/deleteSC");
@@ -41,6 +37,7 @@ const handlerMercadoPago = require("../controllers/MercadoPago/checkout");
 const postOrder = require("../controllers/Order/postOrder");
 const getOrder = require("../controllers/Order/getOrder");
 const getOrdersById = require("../controllers/Order/getOrdersById");
+const getSales = require("../controllers/Order/getSales");
 const eraseSC = require("../controllers/ShoppingCart/eraseSC");
 const deleteProduct = require("../controllers/Products/deleteProduct");
 
@@ -52,6 +49,9 @@ const forgotPassword = require("../controllers/Password/forgotPassword");
 const resetPassword = require("../controllers/Password/resetPassword");
 const postResetPassword = require("../controllers/Password/postResetPassword");
 const enableUserById = require("../controllers/Users/enableUserById");
+
+const getOrderDeliveries = require("../controllers/Delivery/getOrderDeliveries");
+const updateDelivery = require("../controllers/Delivery/updateDelivery");
 
 const mainRouter = Router();
 
@@ -92,14 +92,14 @@ mainRouter.delete("/product/questions/:id", checkLogin, deleteQuestions);
 
 mainRouter.get("/product/questions/answers/:id", getAnswers);
 
-mainRouter.post("/product/questions/answers", checkLogin, postAnswers);
+mainRouter.post("/product/questions/answers" /*, checkLogin*/, postAnswers);
 mainRouter.delete("/product/questions/answers/:id", checkLogin, deleteAnswers);
 mainRouter.get("/questions/:token", checkLogin, getQuestionsByUser);
 
-mainRouter.get("/delivery/:id", checkLogin, getDeliveryById);
-mainRouter.post("/delivery", checkLogin, postDelivery);
-mainRouter.patch("/delivery/:id", checkLogin, updateDelivery);
-mainRouter.delete("/delivery/:id", checkLogin, deleteDelivery);
+// mainRouter.get("/delivery/buyer/:token" /*, checkLogin*/, getDeliveryById);
+// mainRouter.get("/delivery/seller/:token", getDeliveryBySellerId);
+// mainRouter.post("/delivery" /*, checkLogin*/, postDelivery);
+// mainRouter.delete("/delivery/:id", checkLogin, deleteDelivery);
 
 mainRouter.get("/:token/shoppingCart", getSC);
 mainRouter.post("/user/shoppingCart", postSC);
@@ -120,4 +120,8 @@ mainRouter.post("/mercadopago/:token", handlerMercadoPago);
 mainRouter.post("/order", postOrder);
 mainRouter.get("/order/:orderId/:token", getOrder);
 mainRouter.get("/order/:token", getOrdersById);
+mainRouter.get("/sales/:token", getSales);
+
+mainRouter.get("/deliveries/:orderId", getOrderDeliveries);
+mainRouter.patch("/delivery/:id", /* checkLogin,*/ updateDelivery);
 module.exports = mainRouter;
